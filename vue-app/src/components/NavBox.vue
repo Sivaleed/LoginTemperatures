@@ -1,10 +1,11 @@
 <script setup>
-defineProps({
-  msg: {
-    type: String,
-    required: true
-  }
-})
+import { userAuth } from '../stores/auth.store'
+
+const logout = () => {
+    const auth = userAuth()
+    auth.logout()  
+}
+
 </script>
 
 <template>
@@ -16,7 +17,7 @@ defineProps({
         <button>Reset Order</button>
     </li>
     <li>
-        <button>Logout</button>
+        <button @click="logout">Logout</button>
     </li>
   </ul>
 </template>

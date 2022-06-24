@@ -1,6 +1,16 @@
 <script setup>
-import { Suspense } from 'vue';
+import { Suspense, watch, ref} from 'vue'
+import { useRouter } from 'vue-router'
 import Title from './components/TitleBox.vue'
+
+const router = useRouter()
+const title = ref("")
+//Dynamicaly  change the title based on router meta value
+watch(router.currentRoute, () => {  
+  title.value = router.currentRoute.value?.meta?.title
+})
+      
+
 </script>
 
 <template>    
@@ -8,7 +18,7 @@ import Title from './components/TitleBox.vue'
         <Suspense>
             <template #default>
                 <div class="container">
-                    <Title title="Dynamic Header" />
+                    <Title :title="title" />
                     <router-view />
                 </div>
             </template>
@@ -39,9 +49,6 @@ body{
 }
 
 .wrapper .container {
-  /* line-height: 1.5;
-  color: black;  */
-  /* background: gray; */
   display: block;
   justify-content: center;
   

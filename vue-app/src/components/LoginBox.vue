@@ -1,6 +1,6 @@
 <script setup>
 import { ref, reactive } from 'vue'
-//import { RouterLink, RouterView } from 'vue-router';
+import { userAuth } from '../stores/auth.store'
 import InputText from './form/InputText.vue'
 //import { getData, postData } from '../../services/services'
 
@@ -44,16 +44,24 @@ if( formAtt?.value?.error ) {
 const signIn = async () => {
 
     loader.value = true
-    console.log(formAtt.value.formfields)    
+    
+    const auth = userAuth()
+
+    await auth.login(formAtt.value.formfields.userName.value, formAtt.value.formfields.password.value )
+    .catch(e=>{      
+        defaultErr.value = e.error?.msg      
+    })
+
     loader.value = false
 }
 
 </script>
 <template>
-  <div class="form-box">
+  <div class="form-box">    
     <h2 class="green">{{ title }}</h2>
+    <p>Test login: <br /> username: demo, <br /> password: demo</p>
     <p class="green" v-if="defaultMsg">{{ defaultMsg }}</p>
-    <p class="red" v-if="defaultErr">{{ defaultErr }}</p>
+    <p class="error" v-if="defaultErr">{{ defaultErr }}</p>
     <form @submit.prevent="signIn" >
       <InputText 
         v-for="(item, index) in formAtt.formfields" 
