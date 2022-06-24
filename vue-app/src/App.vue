@@ -1,25 +1,21 @@
 <script setup>
-import Login from './components/LoginBox.vue';
-import Register from './components/RegisterBox.vue';
-import Header from './components/HeaderBox.vue';
-import Nav from './components/NavBox.vue';
-import Weather from './components/WeatherBox.vue';
+import { Suspense } from 'vue';
+import Title from './components/TitleBox.vue'
 </script>
 
 <template>    
     <div class="wrapper">
-      <Header msg="Dynamic Header" />
-      <!--Display if user logged in-->
-      <Nav />
-
-      <div class="container">
-        <Login msg="Sign in" />
-        <Register msg="New User? Sign up" />
-        <!--Display if user logged in-->
-        <!-- <br />
-        <Weather title="Colombo" />
-        <Weather title="Melbourne" /> -->
-      </div>
+        <Suspense>
+            <template #default>
+                <div class="container">
+                    <Title title="Dynamic Header" />
+                    <router-view />
+                </div>
+            </template>
+            <template #fallback>
+                <p class="loading">Loading please wait ...</p>
+            </template>
+        </Suspense>
     </div>
  </template>
 
@@ -42,27 +38,33 @@ body{
   /* background: red; */
 }
 
-.wrapper .header {
-  line-height: 1.5;
-  color: black;
-  text-align: center;
-  margin-bottom: 1rem;
-  border-bottom: 1px solid #ccc;
-}
-
 .wrapper .container {
   /* line-height: 1.5;
-  color: black; 
-  background: gray;*/
-  display: flex;
+  color: black;  */
+  /* background: gray; */
+  display: block;
   justify-content: center;
   
 }
 
+.wrapper .container .header {
+  line-height: 1.5;
+  color: black;
+  text-align: center;
+  margin: auto;
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+.wrapper .container .inner-container{
+  display: flex;
+}
+
 .wrapper .container .form-box{  
-   width: 350px; 
+  width: 350px; 
   padding: 0.5rem;
-  margin: 1rem;
+  margin: 1rem auto;
   background-color: #fdfdfd;
   border-radius: 1rem;
   border: 1px solid #dfdfdf;
@@ -100,50 +102,19 @@ body{
 a,
 .green {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
+  color: hsla(160, 100%, 37%, 10);
   transition: 0.4s;
 }
-
+.error{
+  color:red;
+}
 @media (hover: hover) {
   a:hover {
     background-color: hsla(160, 100%, 37%, 0.2);
   }
 }
 
-@media (min-width: 1024px) {
-  /*body {
-    display: flex;
-     place-items: center; 
-     background: white;
-  }
-
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    padding: 2rem;
-    background: white;
-  }
-
-   header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  } */
-
-  /* header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  } */
-
-/* .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-}
-
-.logo {
-    margin: 0 2rem 0 0;
-  } */
+.loading{
+  text-align: center;
 }
 </style>
