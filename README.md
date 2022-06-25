@@ -32,7 +32,21 @@ npm install express dotenv sqlite3 express-validator express-session connect-sql
 
 # Node Server Folder Structure (MVC)
 
-*Todo 
+controllers/ <br />
+--validation/ <br />
+----validation.js <br />
+--userController.js <br />
+--weatherController.js <br />
+database/ <br />
+--db (sqlite) <br />
+models/ <br />
+--user.js <br />
+--weather.js <br />
+routes/ <br />
+--userRoute.js <br />
+
+
+**Note: did not create the views/ folder as it's necessary for this project 
 
 # DB (/database folder)
 # User table
