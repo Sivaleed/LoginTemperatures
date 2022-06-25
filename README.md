@@ -45,6 +45,7 @@ models/
 routes/
 --userRoute.js
 
+
 **Note: did not create the views/ folder as it's necessary for this project 
 
 # DB (/database folder)
