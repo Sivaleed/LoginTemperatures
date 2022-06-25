@@ -1,5 +1,6 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
+import { userAuth } from '../stores/auth.store'
 import InputText from './form/InputText.vue'
 
 
@@ -22,6 +23,8 @@ const formAtt = ref({
 	}
 })
 
+const isDisabled = ref(true)
+const errors = ref(false)
 const title = ref("")
 const loader = ref(false)
 const formData = reactive({})
@@ -35,11 +38,78 @@ if( formAtt?.value?.error ) {
   title.value = formAtt?.value?.formtitle;
 }
 
+//based form field errors submit button disbaled or enabled
+watch( formAtt.value.formfields, () => {
+    errors.value = false
+    isDisabled.value = true
+
+    for (const [key, value] of Object.entries(formAtt.value.formfields)) {
+        if ( formAtt.value.formfields[key].error != "" ){
+            errors.value = true
+        }
+    }
+
+    if(!errors.value){
+        isDisabled.value = false
+    }
+    
+})
+
+
+//form field validation message populate
+const validateInput = (e, f) => {    
+    formAtt.value.formfields[f].error = "";
+    
+    if(formAtt.value.formfields[f].name === 'fullName' || formAtt.value.formfields[f].name === 'userName') {    
+      if( e.length < 4 ) {
+        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' must contain more than 4 characters'
+      } 
+    } 
+
+    if(formAtt.value.formfields[f].name === 'password') {    
+      if( e.length < 6 ) {
+        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' must contain more than 6 characters'
+      }
+    } 
+
+    if(formAtt.value.formfields[f].name === 'confirmPassword' && formAtt.value.formfields[f].value !== formAtt.value.formfields.password.value){
+        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' dose not match'
+    }
+    
+    if(formAtt.value.formfields[f].name === 'cities'){
+        if( formAtt.value.formfields[f].value.length !== 2 ){
+            formAtt.value.formfields[f].error = 'Please select 2 '+ formAtt.value.formfields[f].label
+        }
+    }
+
+}
+
 //form submit
 const signUp = async () => {
+    loader.value = true    
 
-    loader.value = true
-    console.log(formAtt.value.formfields)    
+    const auth = userAuth()
+    //Dynamically submit the JSON
+    for (const [key, value] of Object.entries(formAtt.value.formfields)) {    
+      Object.assign(formData, {[key]: value.value})
+      //reset if any previous error messages 
+      formAtt.value.formfields[key].error = ""
+    }
+    
+    //Call auth register from stores
+    await auth.register(formData)
+      .catch(e=>{
+          //Backend error handling
+          console.log('Error ', e)
+          e.forEach(e => {
+              if( e.param === 'defaultError' ){
+                defaultErr.value = e.msg  
+              } else {
+                formAtt.value.formfields[e.param].error = e.msg
+              }
+          })    
+      })
+
     loader.value = false
 }
 
@@ -55,13 +125,13 @@ const signUp = async () => {
     >
     <InputText 
       v-for="(item, index) in formAtt.formfields" 
-      :att="item"
-      :i="index"
+      :att="item"      
       :options="item?.options"
       :key="index"
+      @validate-input="validateInput"      
     />    
     <div class="form-fileds btn-box">
-      <button>
+      <button v-bind:disabled="isDisabled === true">
         Sign Up
       </button>
     </div>

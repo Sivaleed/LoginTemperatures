@@ -1,8 +1,7 @@
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, watch } from 'vue'
 import { userAuth } from '../stores/auth.store'
 import InputText from './form/InputText.vue'
-//import { getData, postData } from '../../services/services'
 
 //const formAtt = ref(await getData(2000, 'http://localhost:8080/json/signinForm.json'))
 const formAtt = ref({
@@ -29,6 +28,8 @@ const formAtt = ref({
     }
 })
 
+const isDisabled = ref(true)
+const errors = ref(false)
 const title = ref("")
 const loader = ref(false)
 const formData = reactive({})
@@ -41,16 +42,59 @@ if( formAtt?.value?.error ) {
   title.value = formAtt?.value?.formtitle;
 }
 
+//based on form field errors make submit button disbaled or enabled
+watch( formAtt.value.formfields, () => {
+    errors.value = false
+    isDisabled.value = true
+
+    for (const [key, value] of Object.entries(formAtt.value.formfields)) {
+        if ( formAtt.value.formfields[key].error != "" ){
+            errors.value = true
+        }
+    }
+
+    if(!errors.value){
+        isDisabled.value = false
+    }
+    
+})
+
+
+//form field validation messages
+const validateInput = (e, f) => {    
+    formAtt.value.formfields[f].error = "";    
+    if( e.length < 4 ) {
+      formAtt.value.formfields[f].error = 'Invalid '+ formAtt.value.formfields[f].label
+    } 
+}
+
+
+
 const signIn = async () => {
 
-    loader.value = true
-    
-    const auth = userAuth()
+    loader.value = true    
 
-    await auth.login(formAtt.value.formfields.userName.value, formAtt.value.formfields.password.value )
-    .catch(e=>{      
-        defaultErr.value = e.error?.msg      
-    })
+    const auth = userAuth()
+    //Dynamically submit the JSON
+    for (const [key, value] of Object.entries(formAtt.value.formfields)) {    
+      Object.assign(formData, {[key]: value.value})
+      //reset if any previous error messages 
+      formAtt.value.formfields[key].error = ""
+    }
+    
+    //Call auth login from stores state
+    await auth.login(formData)
+      .catch(e=>{
+          //Backend error handling
+          console.log('Error ', e)
+          e.forEach(e => {
+              if( e.param === 'defaultError' ){
+                defaultErr.value = e.msg  
+              } else {
+                formAtt.value.formfields[e.param].error = e.msg
+              }
+          })    
+      })
 
     loader.value = false
 }
@@ -65,13 +109,14 @@ const signIn = async () => {
     <form @submit.prevent="signIn" >
       <InputText 
         v-for="(item, index) in formAtt.formfields" 
-        :att="item"        
-        :i="index"
+        :att="item"
         :key="index"
+        v-model="item.name"
+        @validate-input="validateInput"
       >
       </InputText>
     <div class="form-fileds btn-box">      
-      <button>
+      <button v-bind:disabled="isDisabled === true">
         Sign in
       </button>
     </div>

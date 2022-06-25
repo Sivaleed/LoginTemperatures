@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 
 import {router} from '../router/router'
 
+import { postData } from '../services/services'
+
 export const userAuth = defineStore('auth',{
 
     state: () => {
@@ -11,22 +13,43 @@ export const userAuth = defineStore('auth',{
         }
     },
     actions: {
-        async login(username, password) {
+        async login(formData) {
 
-            //temp code ----------------------
-          
-            if( username == 'demo' && password == 'demo' ){
-                this.user = {apiKey: 'somekey', fullName: 'Demo Test'}
-                localStorage.setItem('user', JSON.stringify(this.user))
-                router.push('/dashboard');
-            } else {
-                return Promise.reject({error:{msg:"Incorrect username or password"}})
-            }   
-            
-            //temp code end --------------------
-          
+            //Callback end server endpoint
+            await postData(3000, 'http://localhost:8080/user/signin', formData)
+            .then(r=>{
+
+                if(r?.errors){
+                    return Promise.reject(r.errors)
+                }
+                
+                //TODO: must check api key is avaailble with the json object
+                if(r?.id){
+                    console.log(r)
+                    this.user = r
+                    localStorage.setItem('user', JSON.stringify(this.user))
+                    router.push('/dashboard');
+                }
+            })    
+        
+        },
+        async register(formData){
+
+            await postData(3000, 'http://localhost:8080/user/signup', formData)
+            .then(r=>{
+
+                if(r?.errors){
+                    return Promise.reject(r.errors)
+                }
+                
+                if(r?.id){
+                    //if success redirect to login page
+                    router.push('/');
+                }
+            })             
         },
         logout() {
+            //TODO: must send the request to server and delete the session           
             this.user = null;
             localStorage.removeItem('user');
             router.push('/');

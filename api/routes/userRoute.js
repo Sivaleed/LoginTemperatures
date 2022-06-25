@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const { signupValidationRules, signupValidate, signinValidationRules, signinValidate } = require('../controllers/validation/validation')
+
 
 // middleware specific to user
 router.use(function timeLog (req, res, next) {
@@ -14,19 +16,17 @@ router.get('/',(req,res)=>{
     res.status(200).send("Users");
 });
 
-// router.get('/signup',(req,res)=>{
-//     console.log("Users regsitration request", req, res);
-//     res.status(200).send("Users regsitration request");
-// });
-
-//Signup (register) router
-router.post('/signup', (req, res) => {
-    userController.postRegister()
-});
+//Signup (register) router and middleware validation
+router.post('/signup', 
+    signupValidationRules(),
+    signupValidate,
+    userController.postRegister);
 
 //Signin (login) router
-router.post('/signin', (req, res) =>{
-    userController.postLogin();    
-});
+router.post('/signin',
+    signinValidationRules(),
+    signinValidate,    
+    userController.postLogin);    
+
 
 module.exports = router;

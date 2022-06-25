@@ -4,39 +4,60 @@ const db_path = path.join(__dirname, '../database','db');
 
 const db = new sqlite3.Database(db_path);
 
-// Find user by username
-function findUser (username, callback) {
- const sql = 'SELECT * FROM users WHERE username = ?';
- db.get(sql, [username], (error, row) => {
-   if (error) {
-     //callback(error.message);
-   } else {
-     //callback(row);
-   };
- });
-};
+/**
+ * function will return user data by providing user table field name and value
+ * 
+ */
+
+const findOne = async (fieldName, value) => {
+
+  //promise return
+  return new Promise(function(resolve, reject) {
+    db.get('SELECT * FROM users WHERE '+ fieldName +' = ?', value, (error, row) => {
+      if(error) { 
+        reject("Read error: " + error.message)
+      } else {
+        resolve(row)
+      }
+    })
+  })
+}
 
 // Insert a new user into the database
-function registerUser (email, callback) {
+const createUser = async (obj) => { 
+    
+    const fullname = obj.fullName;
+    const username = obj.userName;
+    const password = obj.password;
+    const city = JSON.stringify(obj.cities);
 
-    const fullname = "dddd";
-    const username = "ffff";
-    const password = "vbndwe";
-    const city = "array of data";
+    return new Promise(function(resolve, reject) {
+      db.run('INSERT INTO users (fullname, username, password, city) VALUES (?, ?, ?, ?)', 
+                [fullname, username, password, city], (error) => {
+        
+        if (error) {
+            reject("Read error: " + error.message)     
+        } else {
+              //if user row created then take last insert id from table
+              db.get('SELECT last_insert_rowid()', (error, row)=>{
 
- const sql = 'INSERT INTO users (fullname, username, password, city) VALUES (?, ?, ?, ?)';
+              if(error){                
+                reject("Read error: " + error.message) 
+              }
 
- db.run(sql, [fullname, username, password, city], (error, row) => {
-   if (error) {
-     //callback(error.message);
-     return error;
-   } 
-     return true;   
- });
+              //return with last created user id
+              resolve({id: row['last_insert_rowid()']})
+            })
+        }
+      })
+    })
 };
 
-// Export functions
+const updateUser = async (Obj) => {
+    
+} 
+
 module.exports = {
- registerUser,
- findUser
+  createUser,
+  findOne,
 }

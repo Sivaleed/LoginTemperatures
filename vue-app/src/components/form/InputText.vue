@@ -6,14 +6,7 @@ const props = defineProps({
   options:{
     type: Array
   }
-
 })
-
-
-//TEST PURPOSE: handle form input errors
-const d = () => {
-  console.log('todo: client side validation.')
-}
 
 </script>
 
@@ -21,9 +14,8 @@ const d = () => {
   <div class="form-field">
     <label>{{att.label}} :</label>
     <input 
-      @focus="d"
-      :type="att.type" 
-      :name="att.value" 
+      @input="$emit('validate-input', $event.target.value, att.name)"      
+      :type="att.type"       
       v-model.trim="att.value"
       v-if="att.type==='text' || att.type==='password'"
     />
@@ -32,8 +24,9 @@ const d = () => {
       v-model="att.value" 
       v-else-if="att.type=='select'"
       multiple
+      @change="$emit('validate-input', $event.target.value, att.name)"
       >      
-      <option v-for="option in options" :value="option.value">
+      <option v-for="option in options">
         {{option.text}}
       </option>
     </select>
