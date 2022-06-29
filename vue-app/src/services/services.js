@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 //function use for GET request
-export async function getData(timeout = 3000, url) {
+export async function getData(timeout = 2000, url) {
   
   //return promise
   return new Promise(async (resolve, reject) => {
@@ -20,7 +20,7 @@ export async function getData(timeout = 3000, url) {
 }
 
 //function use POST request
-export async function postData(timeout = 3000, url, Obj){
+export async function postData(timeout = 2000, url, Obj){
   
   //return promise
   return new Promise(async (resolve, reject) => {

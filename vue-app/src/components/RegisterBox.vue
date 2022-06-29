@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, watch } from 'vue'
 import { userAuth } from '../stores/auth.store'
+import { tempStore } from '../stores/temp.store'
 import InputText from './form/InputText.vue'
 
 
@@ -14,11 +15,7 @@ const formAtt = ref({
 		"userName": { "label": "Username", "error": "", "placeholder": "", "type":"text", "name":"userName", "value":""},
 		"password": { "label": "Password", "error": "", "placeholder": "", "type":"password", "name":"password", "value":""},
 		"confirmPassword": { "label": "Confirm Password", "error": "", "placeholder": "", "type":"password", "name":"confirmPassword", "value":""},
-		"cities": { "label": "Select 2 Cities", "error": "", "placeholder": "", "type":"select", "name":"cities", "options":[
-			{ "text": "Colombo", "value": "A" },
-			{ "text": "Los Angles", "value": "B" },
-			{ "text": "Toronto", "value": "C"}
-		], 
+		"cities": { "label": "Select 2 Cities", "error": "", "placeholder": "", "type":"select", "name":"cities", "options": "true", 
 		"value":""}
 	}
 })
@@ -30,6 +27,7 @@ const loader = ref(false)
 const formData = reactive({})
 const defaultMsg = ref(null)
 const defaultErr = ref(null)
+const cities = ref(await tempStore().getCities())
 
 //if any errors from server 
 if( formAtt?.value?.error ) {
@@ -37,6 +35,7 @@ if( formAtt?.value?.error ) {
 } else {
   title.value = formAtt?.value?.formtitle;
 }
+
 
 //based form field errors submit button disbaled or enabled
 watch( formAtt.value.formfields, () => {
@@ -99,8 +98,7 @@ const signUp = async () => {
     //Call auth register from stores
     await auth.register(formData)
       .catch(e=>{
-          //Backend error handling
-          console.log('Error ', e)
+          //Backend error handling          
           e.forEach(e => {
               if( e.param === 'defaultError' ){
                 defaultErr.value = e.msg  
@@ -112,6 +110,7 @@ const signUp = async () => {
 
     loader.value = false
 }
+
 
 </script>
 
@@ -126,7 +125,7 @@ const signUp = async () => {
     <InputText 
       v-for="(item, index) in formAtt.formfields" 
       :att="item"      
-      :options="item?.options"
+      :options="item?.options? cities : null"
       :key="index"
       @validate-input="validateInput"      
     />    

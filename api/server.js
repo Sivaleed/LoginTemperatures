@@ -4,7 +4,6 @@ const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
-
 // Constants
 const PORT = 8080;
 const HOST = '127.0.0.1';
@@ -21,9 +20,9 @@ app.use(bodyParser.json())
 const user = require('./routes/userRoute');
 app.use('/user', user);
 
-//import weather route 
-const weather = require('./routes/weatherRoute');
-app.use('/weather', weather);
+//import temp route 
+const temp = require('./routes/tempRoute');
+app.use('/temp', temp);
 
 //for the forms
 app.use(express.static('../vue-app/src/assets'));

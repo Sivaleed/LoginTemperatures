@@ -23,14 +23,14 @@ const props = defineProps({
       :name="att.name"
       v-model="att.value" 
       v-else-if="att.type=='select'"
-      multiple
+      multiple      
       @change="$emit('validate-input', $event.target.value, att.name)"
       >      
-      <option v-for="option in options">
-        {{option.text}}
+      <option v-for="(option, index) in options" :value="index" >
+        {{option.name}}
       </option>
     </select>
-    <p class="error" v-if="att.error">
+    <p class="error" v-show="att.error">
       {{att.error}}
     </p>
   </div>

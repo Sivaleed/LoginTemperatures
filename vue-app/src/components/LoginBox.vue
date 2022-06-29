@@ -85,8 +85,7 @@ const signIn = async () => {
     //Call auth login from stores state
     await auth.login(formData)
       .catch(e=>{
-          //Backend error handling
-          console.log('Error ', e)
+          //Backend error handling          
           e.forEach(e => {
               if( e.param === 'defaultError' ){
                 defaultErr.value = e.msg  
@@ -102,8 +101,7 @@ const signIn = async () => {
 </script>
 <template>
   <div class="form-box">    
-    <h2 class="green">{{ title }}</h2>
-    <p>Test login: <br /> username: demo, <br /> password: demo</p>
+    <h2 class="green">{{ title }}</h2>    
     <p class="green" v-if="defaultMsg">{{ defaultMsg }}</p>
     <p class="error" v-if="defaultErr">{{ defaultErr }}</p>
     <form @submit.prevent="signIn" >

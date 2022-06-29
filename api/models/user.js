@@ -29,11 +29,11 @@ const createUser = async (obj) => {
     const fullname = obj.fullName;
     const username = obj.userName;
     const password = obj.password;
-    const city = JSON.stringify(obj.cities);
-
+    const cities =  JSON.stringify(obj.selectedCity);
+    
     return new Promise(function(resolve, reject) {
-      db.run('INSERT INTO users (fullname, username, password, city) VALUES (?, ?, ?, ?)', 
-                [fullname, username, password, city], (error) => {
+      db.run('INSERT INTO users (fullname, username, password, cities) VALUES (?, ?, ?, ?)', 
+                [fullname, username, password, cities], (error) => {
         
         if (error) {
             reject("Read error: " + error.message)     

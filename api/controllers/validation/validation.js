@@ -49,7 +49,8 @@ const signupValidate = (req, res, next) => {
     return next()
   }
 
-  return res.json({ errors: errors.array() });
+  return res.status(400).json({ errors: errors.array() });
+  //return res.json({ errors: errors.array() });
 
 }
 
@@ -80,7 +81,7 @@ const signinValidate = (req, res, next) => {
     return next()
   }
 
-  return res.json({ errors: errors.array() });
+  return res.status(400).json({ errors: errors.array() });
 
 }
 
