@@ -17,7 +17,7 @@ const props = defineProps({
         <h2>{{ cityname }}</h2>
         <ul>
           <li v-for="(row, key, idx) in rows">              
-              <span class="date">{{ moment(row.created_at).format('ddd, d MMMM  YYYY, h:mm a') }}</span>
+              <span class="date">{{ moment(row.created_at).format('ddd, D MMMM  YYYY, h:mm a') }}</span>
               <span> {{row.celsius}} &#x2103;</span>
               <span> {{row.fahrenheit}} &#x2109; </span>
           </li>

@@ -3,7 +3,6 @@ import { ref, reactive, watch } from 'vue'
 import { userAuth } from '../stores/auth.store'
 import InputText from './form/InputText.vue'
 
-//const formAtt = ref(await getData(2000, 'http://localhost:8080/json/signinForm.json'))
 const formAtt = ref({
 	"formtitle": "Sign In",
 	"formfields":{
@@ -73,7 +72,7 @@ const validateInput = (e, f) => {
 const signIn = async () => {
 
     loader.value = true    
-
+    defaultErr.value = null
     const auth = userAuth()
     //Dynamically submit the JSON
     for (const [key, value] of Object.entries(formAtt.value.formfields)) {    

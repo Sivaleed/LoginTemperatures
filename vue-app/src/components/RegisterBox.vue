@@ -86,7 +86,7 @@ const validateInput = (e, f) => {
 //form submit
 const signUp = async () => {
     loader.value = true    
-
+    defaultErr.value = null
     const auth = userAuth()
     //Dynamically submit the JSON
     for (const [key, value] of Object.entries(formAtt.value.formfields)) {    
@@ -118,7 +118,7 @@ const signUp = async () => {
   <div class="form-box">
     <h2 class="green">{{ title }}</h2>
     <p class="green" v-if="defaultMsg">{{ defaultMsg }}</p>
-    <p class="red" v-if="defaultErr">{{ defaultErr }}</p>
+    <p class="error" v-if="defaultErr">{{ defaultErr }}</p>
     <form 
       @submit.prevent="signUp"
     >

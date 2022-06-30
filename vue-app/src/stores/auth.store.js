@@ -15,7 +15,7 @@ export const userAuth = defineStore('auth',{
         async login(formData) {
            
             //Callback end server endpoint
-            await postData(1000, 'http://localhost:8080/user/signin', formData)
+            await postData(1000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_LOGIN , formData)
             .then(r=>{
                
                 //TODO: must check api key is availble with the json object
@@ -53,13 +53,20 @@ export const userAuth = defineStore('auth',{
                 }
 
             }).catch(e=>{
-                return Promise.reject(e.response.data.errors)                
+                
+                if(e?.response?.data?.errors){                   
+                    e.response.data.errors.push({param : 'defaultError', msg : 'See below error(s)' })
+                    return Promise.reject(e.response.data.errors)
+                } else {
+                    return Promise.reject([{param : 'defaultError', msg : e.message }])
+                }
+                                
             })    
         
         },
         async register(formData){
 
-            await postData(3000, 'http://localhost:8080/user/signup', formData)
+            await postData(3000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_REGISTRATION, formData)
             .then(r=>{
                              
                 if(r?.id){
@@ -68,7 +75,13 @@ export const userAuth = defineStore('auth',{
                 }
             })
             .catch(e=>{
-                return Promise.reject(e.response.data.errors)
+                //return Promise.reject(e.response.data.errors)
+                if(e?.response?.data?.errors){                   
+                    e.response.data.errors.push({param : 'defaultError', msg : 'See below error(s)' })
+                    return Promise.reject(e.response.data.errors)
+                } else {
+                    return Promise.reject([{param : 'defaultError', msg : e.message }])
+                }
             })             
         },
         async logout() {

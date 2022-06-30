@@ -12,7 +12,7 @@ export const tempStore = defineStore('temp',{
         async createTemp(id) {
             
             //Call backend server endpoint
-            await getData(2000, 'http://localhost:8080/temp/callweatherapi?id='+id)
+            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_CREATE_TEMPERATURE +'?id='+id)
             .then(r=>{
                 return true
             })
@@ -35,7 +35,7 @@ export const tempStore = defineStore('temp',{
 
         },
         async loadTemp(id){
-            await getData(2000, 'http://localhost:8080/temp/get?id='+id)
+            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_READ_TEMPERATURE+'?id='+id)
             .then(r=>{
              
                 this.temperature = r
