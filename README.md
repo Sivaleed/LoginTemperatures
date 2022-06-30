@@ -51,11 +51,30 @@ routes/ <br />
 # DB (/database folder)
 # User table
 
-CREATE TABLE users (id INTEGER PRIMARY KEY AUTOINCREMENT, fullname varchar(20) NOT NULL, username varchar(10) NOT NULL UNIQUE, password varchar(10) NOT NULL, city text NOT NULL, created_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL);
+CREATE TABLE IF NOT EXISTS "users" (<br />
+        "id"    INTEGER,<br />
+        "fullname"      varchar(20) NOT NULL,<br />
+        "username"      varchar(10) NOT NULL UNIQUE,<br />
+        "password"      varchar(10) NOT NULL,<br />
+        "cities"        text NOT NULL,<br />
+        "created_at"    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,<br />
+        "login_session" varchar(255),<br />
+        PRIMARY KEY("id" AUTOINCREMENT)<br />
+);
 
-# User Weather Table (To do)
+# Temperature Table
 
-*Todo
+CREATE TABLE IF NOT EXISTS "temperature" (<br />
+	"id"    INTEGER,<br />
+	"user_id"       INTEGER NOT NULL,<br />
+	"city_id"       INTEGER NOT NULL,<br />
+	"city_name"     varchar(255) NOT NULL,<br />
+	"celsius"       REAL(3, 2),<br />
+	"fahrenheit"    REAL(3, 2),<br />
+	"created_at"    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,<br />
+	PRIMARY KEY("id" AUTOINCREMENT)<br />
+);
+
 
 ------------------------------------------------------------------------------------------------------------
 
