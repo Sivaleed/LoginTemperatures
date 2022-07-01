@@ -10,7 +10,6 @@ const db = new sqlite3.Database(db_path);
  */
 
 const findOne = async (fieldName, value) => {
-
   //promise return
   return new Promise(function(resolve, reject) {
     db.get('SELECT * FROM users WHERE '+ fieldName +' = ?', value, (error, row) => {
@@ -22,6 +21,27 @@ const findOne = async (fieldName, value) => {
     })
   })
 }
+
+/**
+ * function will check token and return user object
+ * @param {*} obj 
+ * @param {*} cb must need callback function 
+ */
+
+const findToken = async (obj, cb) => {
+    
+    db.get('SELECT * FROM users WHERE '+ Object.keys(obj)[0] +' = ?', obj[Object.keys(obj)[0]], (error, row) => {
+      if(error) {         
+          return cb(error, null)
+      } 
+      if(!row) {         
+          return cb(null, false)
+      }
+      delete row.password              
+      return cb(null, row)
+    })
+}
+
 
 // Insert a new user into the database
 const createUser = async (obj) => { 
@@ -38,26 +58,47 @@ const createUser = async (obj) => {
         if (error) {
             reject("Read error: " + error.message)     
         } else {
-              //if user row created then take last insert id from table
-              db.get('SELECT last_insert_rowid()', (error, row)=>{
+                //if user row created then take last insert id from table
+                db.get('SELECT last_insert_rowid()', (error, row)=>{
 
-              if(error){                
-                reject("Read error: " + error.message) 
-              }
+                if(error){                
+                  reject("Read error: " + error.message) 
+                }
 
-              //return with last created user id
-              resolve({id: row['last_insert_rowid()']})
+                //return with last created user id
+                resolve({id: row['last_insert_rowid()']})
             })
         }
       })
     })
 };
 
-const updateUser = async (Obj) => {
+/**
+ * Update user
+ * @param {*} obj 
+ * @param {*} cb
+ *  
+ */
+
+const updateUser = async (obj, cb) => {
     
-} 
+    db.run("UPDATE users SET token=$token WHERE id=$id", {$token: obj.token, $id:obj.id}, function(error) {              
+        if (error) { 
+            return cb(error); 
+        }
+
+        if(!this.changes){
+            return cb(null, null);  
+        }
+
+        return cb(null, this.changes);
+    })
+
+}
 
 module.exports = {
-  createUser,
-  findOne,
+    createUser,
+    findOne,
+    findToken,
+    updateUser,
 }

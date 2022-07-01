@@ -30,7 +30,7 @@ const postRegister = (req, res) => {
     bcrypt.hash(req.body.password, saltRounds, function(error, hash) {
         
         if( error ){
-            return res.status(400).json({errors:[{location: "null", msg : error.message, param: "defaultError", value:'' }]})
+            return res.status(400).json({errors:[{location: "null", msg : error.message, param: "defaultErr", value:'' }]})
         }
         
         //store hash into body object
@@ -57,9 +57,27 @@ const postLogin = (req, res) => {
                     if(!match){
                         return res.status(400).json({errors:[{location: "null", msg : 'Incorrect password.', param: "password", value:'' }]})
                     } else {
-                        //TODO: generate the session key and insert into the table
+                        
                         delete result.password
-                        return res.status(200).json(Object.assign( result, {msg: "You have succsefully logged"}) )
+                        
+                        //generate token and assigned to user object
+                        Object.assign(result, {token: generateToken(result.id, 50) })
+
+                        userModel.updateUser(result, (error, update) =>{
+
+                            if(error){
+                                return res.status(400).json({errors:[{location: "null", msg : "Could not create the token, please try again", param: "defaultErr", value:'' }]})
+                            }
+                            if(!update){
+                                return res.status(400).json({errors:[{location: "null", msg : "Could not create the token, please try again", param: "defaultErr", value:'' }]})
+                            }
+
+                            if(update){                                
+                                return res.status(200).json(Object.assign( result, {msg: "You have succsefully logged"}) )
+                            }
+                        })
+
+                        
                     }
                 })
            
@@ -68,7 +86,45 @@ const postLogin = (req, res) => {
  
 }
 
+const logout = (req, res) => {
+        
+    Object.assign(req.query, {token:''})
+    
+    userModel.updateUser(req.query, (error, update) =>{
+        if(error){
+            return res.status(400).json({errors:[{location: "null", msg : error.message, param: "defaultErr", value:'' }]})
+        }
+        if(!update){
+            
+            return res.status(400).json({errors:[{location: "null", msg : "Could not logout from the system, please try again", param: "defaultErr", value:'' }]})
+        }
+        return res.status(200).json({msg: "You have succsefully logged out"})
+        
+    })
+
+    
+}
+
+
+/**
+ * Temporary function to generate a random key as token
+ *  
+ */
+
+const generateToken = (id, len) => {
+    
+    let key = "";
+    const possible = "@-_ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
+  	const d = new Date().getTime();	
+    
+    for (var i = 0; i < (len-String(id).length-String(d).length); i++)
+      key += possible.charAt(Math.floor(Math.random() * possible.length));
+  
+    return id+key+new Date().getTime();
+}
+
 module.exports = {
     postRegister,
-    postLogin
+    postLogin,
+    logout
 }

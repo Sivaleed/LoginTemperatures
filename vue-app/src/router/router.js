@@ -29,18 +29,20 @@ export const router = createRouter({
 })
 
 router.beforeEach((to) => {
-    //console.log(to)
+    
     const publicPages = ['/', '/register']
     const authRequired = !publicPages.includes(to.path);
 
     const store = userAuth()
-    
+
+    //TODO: make request to server before each front end request for protected routers    
+
     if (!authRequired && store.user) {
         return '/dashboard';
     }
 
     if (authRequired && !store.user) {
-        console.log(authRequired)
+        
         store.returnUrl = to.fullPath;
         return '/';
     }

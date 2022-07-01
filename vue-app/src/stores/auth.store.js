@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { router } from '../router/router'
 import { tempStore  } from '../stores/temp.store'
-import { postData } from '../services/services'
+import { postData, getData } from '../services/services'
 
 export const userAuth = defineStore('auth',{
 
@@ -19,7 +19,7 @@ export const userAuth = defineStore('auth',{
             .then(r=>{
                
                 //TODO: must check api key is availble with the json object
-                if(r?.id){          
+                if(r?.token){          
                     this.user = r
                     localStorage.setItem('user', JSON.stringify(this.user))
                     return true;
@@ -31,7 +31,7 @@ export const userAuth = defineStore('auth',{
                 //Retrive data from 
                 if(r){
                     
-                 return await tempStore().createTemp(this.user.id)
+                 return await tempStore().createTemp(this.user)
                     .then(r=>{
                         
                         return true
@@ -46,7 +46,7 @@ export const userAuth = defineStore('auth',{
             })
             .then( async (r)=>{
                 
-                await tempStore().loadTemp(this.user.id)
+                await tempStore().loadTemp(this.user)
 
                 if(r){
                     router.push('/dashboard')
@@ -55,7 +55,7 @@ export const userAuth = defineStore('auth',{
             }).catch(e=>{
                 
                 if(e?.response?.data?.errors){                   
-                    e.response.data.errors.push({param : 'defaultError', msg : 'See below error(s)' })
+                    e.response.data.errors.push({param : 'defaultErr', msg : 'See below error(s)' })
                     return Promise.reject(e.response.data.errors)
                 } else {
                     return Promise.reject([{param : 'defaultError', msg : e.message }])
@@ -85,11 +85,23 @@ export const userAuth = defineStore('auth',{
             })             
         },
         async logout() {
+
+            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_LOGOUT+'?id='+this.user.id, this.user.token)
+            .then(async (r)=>{
+                
+                await tempStore().removeLocalData() //Remove local data from client
+                localStorage.removeItem('user')
+                this.user = null                
+                router.push('/')
+                
+            })
+            .catch(e=>{
+                
+                return Promise.reject(e.response.data.errors)
+            })
+
             //TODO: must send the request to server and delete the session            
-            await tempStore().removeLocalData() //Remove local data from client
-            this.user = null            
-            localStorage.removeItem('user')
-            router.push('/')
+           
         }
     }   
 

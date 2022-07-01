@@ -9,14 +9,14 @@ export const tempStore = defineStore('temp',{
         }
     },
     actions: {
-        async createTemp(id) {
+        async createTemp(user) {
             
             //Call backend server endpoint
-            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_CREATE_TEMPERATURE +'?id='+id)
+            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_CREATE_TEMPERATURE +'?id='+user.id, user.token)
             .then(r=>{
                 return true
             })
-            .catch(e=>{                
+            .catch(e=>{                  
                 return Promise.reject(e.response.data.errors)
             })    
         
@@ -34,8 +34,8 @@ export const tempStore = defineStore('temp',{
             return Promise.resolve(cities)
 
         },
-        async loadTemp(id){
-            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_READ_TEMPERATURE+'?id='+id)
+        async loadTemp(user){
+            await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_READ_TEMPERATURE+'?id='+user.id, user.token)
             .then(r=>{
              
                 this.temperature = r

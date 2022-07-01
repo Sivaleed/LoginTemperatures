@@ -56,7 +56,7 @@ const callWeatherApi = async (req, res) => {
             {   
                 url:'https://api.openweathermap.org/data/2.5/onecall?lat='+e.lat+'&lon='+e.lon+'&exclude=hourly,daily,minutely,alerts&appid='+apiKey+'&units=metric',
                 userId: Number(userId),
-                cityI: e.id,
+                cityId: e.id,
                 cityName: e.name
             })
     });
@@ -67,9 +67,9 @@ const callWeatherApi = async (req, res) => {
 
             apiData.forEach((v, k) => {
                 delete apiReqData[k].url
-                Object.assign(apiReqData[k], {celsius : v.data.current.temp }, {fahrenheit : (((v.data.current.temp * 9)/5)+32).toFixed(2)} )
+                Object.assign(apiReqData[k], {celsius : v.data.current.temp }, {fahrenheit : Number((((v.data.current.temp * 9)/5)+32).toFixed(2))} )
             });
-
+            
             try{
                 await tempModel.createMultiTemp(apiReqData)
                 return res.status(200).json({result: 'ok'})

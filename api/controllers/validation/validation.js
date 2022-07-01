@@ -11,7 +11,7 @@ const signupValidationRules = () => {
     //validate username already used
     body('userName').custom((value) => {
       
-      return userModel.findOne('username', value).then(result=>{        
+      return userModel.findOne('username', value.toLowerCase()).then(result=>{        
         if(result?.id){          
           return Promise.reject(false);          
         } else {

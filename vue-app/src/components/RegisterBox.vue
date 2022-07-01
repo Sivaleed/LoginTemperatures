@@ -56,18 +56,30 @@ watch( formAtt.value.formfields, () => {
 
 
 //form field validation message populate
-const validateInput = (e, f) => {    
+const validateInput = (e, f) => {
+    
+    const regex_username = /^[a-z0-9_-]{4,8}$/
+    const regex_password = /(?=(.*[0-9]))((?=.*[A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z]))^.{6,}$/
+    
     formAtt.value.formfields[f].error = "";
     
-    if(formAtt.value.formfields[f].name === 'fullName' || formAtt.value.formfields[f].name === 'userName') {    
+    if(formAtt.value.formfields[f].name === 'fullName') {       
+        
       if( e.length < 4 ) {
         formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' must contain more than 4 characters'
       } 
+    }
+
+    if(formAtt.value.formfields[f].name === 'userName') { 
+     
+      if( !regex_username.exec(e) ) {
+        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' must contain 4 to 8 alphanumeric letters'
+      }
     } 
 
     if(formAtt.value.formfields[f].name === 'password') {    
-      if( e.length < 6 ) {
-        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' must contain more than 6 characters'
+      if( !regex_password.exec(e) ) {
+        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' 1 lowercase letter, 1 uppercase letter, 1 number, and be at least 6 characters long'
       }
     } 
 
@@ -100,7 +112,7 @@ const signUp = async () => {
       .catch(e=>{
           //Backend error handling          
           e.forEach(e => {
-              if( e.param === 'defaultError' ){
+              if( e.param === 'defaultErr' ){
                 defaultErr.value = e.msg  
               } else {
                 formAtt.value.formfields[e.param].error = e.msg
@@ -117,8 +129,9 @@ const signUp = async () => {
 <template>
   <div class="form-box">
     <h2 class="green">{{ title }}</h2>
-    <p class="green" v-if="defaultMsg">{{ defaultMsg }}</p>
-    <p class="error" v-if="defaultErr">{{ defaultErr }}</p>
+    <p class="green text-center" v-if="defaultMsg">{{ defaultMsg }}</p>
+    <p class="error text-center" v-if="defaultErr">{{ defaultErr }}</p>
+    <p class="green text-center" v-if="loader">Please wait...</p>
     <form 
       @submit.prevent="signUp"
     >
@@ -133,8 +146,7 @@ const signUp = async () => {
       <button v-bind:disabled="isDisabled === true">
         Sign Up
       </button>
-    </div>
-    <p class="green" v-if="loader">Please wait...</p>
+    </div>   
   </form>
   <router-link to="/" class="nav-item nav-link">Already a user? Sign In</router-link>
   </div>

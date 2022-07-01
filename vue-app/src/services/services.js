@@ -1,18 +1,26 @@
 import axios from 'axios'
 
 //function use for GET request
-export async function getData(timeout = 2000, url) {
+export async function getData(timeout = 2000, url, token = null) {
   
+  let headerAuth = null
+
+   if(token){
+      headerAuth = {
+          headers: { Authorization: 'Bearer '+ token }
+      };   
+   } 
+
   //return promise
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await axios.get(url)
+      const res = await axios.get(url, token? headerAuth : null )
 
       setTimeout(async () => {
         resolve(await res.data);
       }, timeout);
 
-    } catch (err) {
+    } catch (err) {      
       
       reject(err); //reject with error
      }

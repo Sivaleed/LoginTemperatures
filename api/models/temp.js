@@ -17,23 +17,26 @@ const db = new sqlite3.Database(db_path);
 
 const createMultiTemp = async (arr) => {  
     
-    const placeholders = arr.map(() => "(?,?,?,?,?)").join(",");
+   const placeholders = arr.map(() => "(?,?,?,?,?)").join(",");
     
     //make the array object into flatten array
     const newArr = []    
     arr.map((r) => Object.values(r)).map( r => newArr.push(...r))
-        
+    
     const sql = 'INSERT INTO temperature (user_id, city_id, city_name, celsius, fahrenheit ) VALUES '+ placeholders;
     return new Promise(function(resolve, reject) {
-      db.run(sql, newArr, (error) => {
+      db.run(sql, newArr, function(error) {
           
           if (error) {
-              reject("Read error: " + error.message)     
-          } 
-            
-            
-          resolve(true)
+              reject("Read error: " + error.message)
+          }
           
+          if(!this.lastID){
+              reject("Temperature rows not created")
+          }
+                   
+          
+          resolve(true)          
       })
     })
     
@@ -49,11 +52,13 @@ const getTempByUserId = async (id) => {
 
   return new Promise(function(resolve, reject) {
     db.all("SELECT id, city_name, celsius, fahrenheit, datetime(created_at, 'localtime') as created_at FROM temperature WHERE user_id=? ORDER BY created_at DESC", id, (error, row) => {
+      
       if(error) { 
         reject("Read error: " + error.message)
-      } else {
-        resolve(row)
-      }
+      } 
+     
+      resolve(row)
+      
     })
   })    
 }

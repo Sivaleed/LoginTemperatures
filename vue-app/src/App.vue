@@ -113,7 +113,10 @@ a,
   transition: 0.4s;
 }
 .error{
-  color:red;
+  color:red;  
+}
+.text-center{
+  text-align: center;
 }
 @media (hover: hover) {
   a:hover {

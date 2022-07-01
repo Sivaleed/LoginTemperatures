@@ -4,14 +4,25 @@ import TemperatureBox from './TemperatureBox.vue'
 import { userAuth } from '../stores/auth.store'
 import { tempStore } from '../stores/temp.store'
 
-const errors = ref(null)
+const defaultErr = ref()
 const warning = ref(null)
 const loader = ref(false)
 const hottestLabel = ref(true)
 
-const logout = () => {
-    const auth = userAuth()
-    auth.logout()  
+const logout = async () => {
+    warning.value = 'Please wait while your being logout.'
+    
+    await userAuth().logout()
+    .catch(e => {
+        
+        e.forEach(e => {
+            if( e.param === 'defaultErr' ){
+                defaultErr.value = e.msg  
+            } 
+        })
+    }) 
+
+    warning.value = '' 
 }
 
 //Retrive data from tempstore
@@ -49,8 +60,7 @@ const reset = () => {
 
 
 </script>
-<template>   
-    <!-- <p v-if="data?.warning">{{data.warning}}</p> --> 
+<template>
     <ul class="nav">
         <li>
             <button :class="[hottestLabel ? 'purple-bg' : 'blue-bg']" @click="hottest">
@@ -64,6 +74,8 @@ const reset = () => {
             <button @click="logout">Logout</button>
         </li>
     </ul>
+    <p class="green text-center" v-if="warning">{{warning}}</p>
+    <p class="error text-center" v-if="defaultErr">{{defaultErr}}</p> 
     <div class="inner-container">
         <p class="error" v-if="!temperatureData">Sorry no data availble at this time.</p>
         <TemperatureBox :cityname="key" :rows="value" v-for="(value, key, idx) in temperatureData" v-if="temperatureData" />

@@ -3,6 +3,10 @@
 const express = require('express')
 const cors = require('cors')
 const bodyParser = require('body-parser')
+const passport = require('passport');
+const Strategy = require('passport-http-bearer').Strategy;
+
+const userModel = require("./models/user"); //TODO: to take this feature into another controller like validation
 
 // Constants
 const PORT = 8080;
@@ -15,6 +19,21 @@ const app = express()
 app.use(cors())
 
 app.use(bodyParser.json())
+
+
+/**
+ * passport bearer configuration
+ * 
+ */
+passport.use(new Strategy(
+  async function(token, cb) {          
+      await userModel.findToken({'token' : token}, function(err, user) {
+        if (err) { return cb(err); }
+        if (!user) { return cb(null, false); }
+      return cb(null, user);
+  });
+}));
+
 
 //import user route
 const user = require('./routes/userRoute');

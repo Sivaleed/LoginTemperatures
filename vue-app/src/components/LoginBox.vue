@@ -60,11 +60,23 @@ watch( formAtt.value.formfields, () => {
 
 
 //form field validation messages
-const validateInput = (e, f) => {    
-    formAtt.value.formfields[f].error = "";    
-    if( e.length < 4 ) {
-      formAtt.value.formfields[f].error = 'Invalid '+ formAtt.value.formfields[f].label
+const validateInput = (e, f) => {
+ 
+    formAtt.value.formfields[f].error = ""; 
+
+    if(formAtt.value.formfields[f].name === 'userName') { 
+     
+      if( e.length < 2 ) {
+        formAtt.value.formfields[f].error = formAtt.value.formfields[f].label +' must not empty'
+      }
     } 
+
+    if(formAtt.value.formfields[f].name === 'password') {    
+      if( e.length < 2  ) {
+        formAtt.value.formfields[f].error =  formAtt.value.formfields[f].label +' must not empty'
+      }
+    } 
+
 }
 
 
@@ -84,9 +96,10 @@ const signIn = async () => {
     //Call auth login from stores state
     await auth.login(formData)
       .catch(e=>{
-          //Backend error handling          
+          //Backend error handling
+                   
           e.forEach(e => {
-              if( e.param === 'defaultError' ){
+              if( e.param === 'defaultErr' ){
                 defaultErr.value = e.msg  
               } else {
                 formAtt.value.formfields[e.param].error = e.msg
@@ -101,8 +114,9 @@ const signIn = async () => {
 <template>
   <div class="form-box">    
     <h2 class="green">{{ title }}</h2>    
-    <p class="green" v-if="defaultMsg">{{ defaultMsg }}</p>
-    <p class="error" v-if="defaultErr">{{ defaultErr }}</p>
+    <p class="green text-center" v-if="defaultMsg">{{ defaultMsg }}</p>
+    <p class="error text-center" v-if="defaultErr">{{ defaultErr }}</p>
+    <p class="green text-center" v-if="loader">Please wait...</p>
     <form @submit.prevent="signIn" >
       <InputText 
         v-for="(item, index) in formAtt.formfields" 
@@ -116,8 +130,7 @@ const signIn = async () => {
       <button v-bind:disabled="isDisabled === true">
         Sign in
       </button>
-    </div>
-    <p class="green" v-if="loader">Please wait...</p>
+    </div>    
   </form>
   <router-link to="/register" class="nav-item nav-link">New user? Sign Up</router-link>
   </div>
