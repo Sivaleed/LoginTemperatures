@@ -19,7 +19,7 @@ Login Temperatures / Fullstack Coding Challenge / Coderbyte.com
 mkdir login-temperatures
 cd login-temperatures
 
-# NodeJs for server (/api folder)
+# NodeJs for server (api/ folder)
 
 Create folder inside the login-temperatures for NodeJs server
 
@@ -36,30 +36,30 @@ controllers/ <br />
 --validation/ <br />
 ----validation.js <br />
 --userController.js <br />
---weatherController.js <br />
+--tempController.js <br />
 database/ <br />
 --db (sqlite) <br />
 models/ <br />
 --user.js <br />
---weather.js <br />
+--temp.js <br />
 routes/ <br />
 --userRoute.js <br />
 
 
 **Note: did not create the views/ folder as it's necessary for this project 
 
-# DB (/database folder)
+# DB (database/ folder)
 # User table
 
 CREATE TABLE IF NOT EXISTS "users" (<br />
         "id"    INTEGER,<br />
         "fullname"      varchar(20) NOT NULL,<br />
-        "username"      varchar(10) NOT NULL UNIQUE,<br />
-        "password"      varchar(10) NOT NULL,<br />
+        "username"      varchar(10) NOT NULL UNIQUE, <br />
+        "password"      varchar(100) NOT NULL,<br />
         "cities"        text NOT NULL,<br />
-        "created_at"    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,<br />
-        "login_session" varchar(255),<br />
-        PRIMARY KEY("id" AUTOINCREMENT)<br />
+        "created_at"    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP, <br />
+        "token" varchar(255),<br />
+        PRIMARY KEY("id" AUTOINCREMENT) <br />
 );
 
 # Temperature Table
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS "temperature" (<br />
 
 ------------------------------------------------------------------------------------------------------------
 
-# Setingup Vue (/vue-app)
+# Setingup Vue (vue-app/)
 
 Go to login-temperatures folder run below command
 
