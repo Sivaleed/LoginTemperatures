@@ -12,7 +12,7 @@ Login Temperatures / Fullstack Coding Challenge / Coderbyte.com
 - sqlite3 : Interface for bind sqlite db 
 - connect-sqlite3 : Session store model for sqlite db 
 - cors : Enable All CORS Requests from different domains 
-- dotenv : to declare envirment /setting veribales   
+- dotenv : To declare environment/setting variables   
 - express : Node.js web application framework
 - express-validator : Package for validate form input etc... as middleware
 - passport : Authentication package for node server as middleware
