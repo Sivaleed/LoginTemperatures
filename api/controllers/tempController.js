@@ -2,11 +2,10 @@ const { json } = require("body-parser");
 const tempModel = require("../models/temp");
 const userModel = require("../models/user");
 const axios = require("axios");
-const e = require("express");
 
 
 /**
- * Make temperature data to json format
+ * Retrive temperature data from db and convert to json format
  * @param {*} req 
  * @param {*} res 
  * @returns Json format 
@@ -47,14 +46,14 @@ const callWeatherApi = async (req, res) => {
     
     const apiReqData = []
     const userId = req.query.id
-    const apiKey = '8dc9ba99c4e5fe28f4dc20edbc1848c0' //TODO: must define in confige file
+    const apiKey = process.env.OPEN_WEATHER_API_KEY
 
     const user = await userModel.findOne('id', req.query.id)
    
     JSON.parse(user.cities).forEach((e) => {
         apiReqData.push(
             {   
-                url:'https://api.openweathermap.org/data/2.5/onecall?lat='+e.lat+'&lon='+e.lon+'&exclude=hourly,daily,minutely,alerts&appid='+apiKey+'&units=metric',
+                url: process.env.OPEN_WEATHER_URL + '?lat='+e.lat+'&lon='+e.lon+'&exclude=hourly,daily,minutely,alerts&appid='+apiKey+'&units=metric',
                 userId: Number(userId),
                 cityId: e.id,
                 cityName: e.name

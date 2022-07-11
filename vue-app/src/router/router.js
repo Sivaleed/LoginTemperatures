@@ -1,29 +1,23 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { userAuth } from '../stores/auth.store';
-import LoginBox from '../components/LoginBox.vue'
-import RegisterBox  from '../components/RegisterBox.vue'
-import Dashboard from '../components/DashboardView.vue'
 
 export const router = createRouter({
     history: createWebHistory(),
     routes: [
         {
             path: '/',
-            name: 'Home',
-            meta: { title: 'Welcome to Weather App' },
-            component: LoginBox,
+            name: 'Home', 
+            component: () => import("@/components/LoginBox.vue")
         },
         {
             path: '/register',
             name: 'Register',
-            meta: { title: 'Register' },
-            component: RegisterBox,
+            component: () => import("@/components/RegisterBox.vue")
         },
         {
             path: '/dashboard',
             name: 'Dashboard',
-            meta: { title: 'Login Temperatures' },
-            component: Dashboard,
+            component: () => import("@/components/DashboardView.vue")
         }
     ]
 })
@@ -35,14 +29,11 @@ router.beforeEach((to) => {
 
     const store = userAuth()
 
-    //TODO: make request to server before each front end request for protected routers    
-
     if (!authRequired && store.user) {
         return '/dashboard';
     }
 
-    if (authRequired && !store.user) {
-        
+    if (authRequired && !store.user) {        
         store.returnUrl = to.fullPath;
         return '/';
     }

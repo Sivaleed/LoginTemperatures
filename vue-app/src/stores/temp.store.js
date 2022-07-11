@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { getData } from '../services/services'
+import configJson from '../../config.json'
 
 export const tempStore = defineStore('temp',{
 
@@ -22,14 +23,8 @@ export const tempStore = defineStore('temp',{
         
         },
         async getCities() {
-            //temp code             
-            const cities = [
-                { id: 1, name: "Colombo", lat: "6.9271", lon: "79.8612" },
-                { id: 2, name: "Chicago", lat: "33.44", lon: "-94.04" },
-                { id: 3, name: "Melbourne", lat: "37.8136", lon: "144.9631" },
-                { id: 4, name: "London", lat: "51.5072", lon: "0.1276" },
-                { id: 5, name: "Cape Town", lat: "33.9249", lon: "18.4241" },
-            ]    
+
+            const cities = configJson?.config?.cities
 
             return Promise.resolve(cities)
 

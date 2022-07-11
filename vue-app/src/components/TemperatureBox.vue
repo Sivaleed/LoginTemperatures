@@ -26,10 +26,10 @@ const props = defineProps({
 </template>
 
 <style scoped>
-.weather-list{
-  width: 500px;
+.weather-list{  
+  min-width: 380px;
   padding: 0.5rem;
-  margin: 1rem;
+  margin: 1rem auto;
   background-color: #fdfdfd;
   border-radius: 1rem;
   border: 1px solid #dfdfdf;
@@ -37,8 +37,7 @@ const props = defineProps({
 
 .weather-list ul{
     list-style: none;
-    padding: 0;
-    /* background: red; */
+    padding: 0;   
 }
 
 .weather-list ul li{

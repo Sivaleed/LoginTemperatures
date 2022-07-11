@@ -2,44 +2,19 @@
 import { ref, reactive, watch } from 'vue'
 import { userAuth } from '../stores/auth.store'
 import InputText from './form/InputText.vue'
+import configJson from '../../config.json'
+import Title from './TitleBox.vue'
 
-const formAtt = ref({
-	"formtitle": "Sign In",
-	"formfields":{
-        "userName":{
-            "validation": "", 
-            "label": "Username", 
-            "error": "", 
-            "placeholder": "", 
-            "type":"text", 
-            "name": "userName", 
-            "value" :""
-        },
-        "password":{
-            "validation": "", 
-            "label": "Password", 
-            "error": "", 
-            "placeholder": "", 
-            "type":"password", 
-            "name":"password", 
-            "value":""
-        }
-    }
-})
+const formAtt = ref(configJson?.config?.forms?.login)
 
 const isDisabled = ref(true)
 const errors = ref(false)
+const header = ref(configJson?.config?.pagetitles?.home)
 const title = ref("")
 const loader = ref(false)
 const formData = reactive({})
 const defaultMsg = ref(null)
 const defaultErr = ref(null)
-
-if( formAtt?.value?.error ) {
-  throw new Error(formAtt?.value?.error)
-} else {
-  title.value = formAtt?.value?.formtitle;
-}
 
 //based on form field errors make submit button disbaled or enabled
 watch( formAtt.value.formfields, () => {
@@ -112,27 +87,30 @@ const signIn = async () => {
 
 </script>
 <template>
-  <div class="form-box">    
-    <h2 class="green">{{ title }}</h2>    
-    <p class="green text-center" v-if="defaultMsg">{{ defaultMsg }}</p>
-    <p class="error text-center" v-if="defaultErr">{{ defaultErr }}</p>
-    <p class="green text-center" v-if="loader">Please wait...</p>
-    <form @submit.prevent="signIn" >
-      <InputText 
-        v-for="(item, index) in formAtt.formfields" 
-        :att="item"
-        :key="index"
-        v-model="item.name"
-        @validate-input="validateInput"
-      >
-      </InputText>
-    <div class="form-fileds btn-box">      
-      <button v-bind:disabled="isDisabled === true">
-        Sign in
-      </button>
-    </div>    
-  </form>
-  <router-link to="/register" class="nav-item nav-link">New user? Sign Up</router-link>
+  <div class="container">
+    <Title :header="header" />
+    <div class="form-box">    
+      <h2 class="green">{{ title }}</h2>    
+      <p class="green text-center" v-if="defaultMsg">{{ defaultMsg }}</p>
+      <p class="error text-center" v-if="defaultErr">{{ defaultErr }}</p>
+      <p class="green text-center" v-if="loader">Please wait...</p>
+      <form @submit.prevent="signIn" >
+        <InputText 
+          v-for="(item, index) in formAtt.formfields" 
+          :att="item"
+          :key="index"
+          v-model="item.name"
+          @validate-input="validateInput"
+        >
+        </InputText>
+      <div class="form-fileds btn-box">      
+        <button v-bind:disabled="isDisabled === true">
+          Sign in
+        </button>
+      </div>    
+    </form>
+    <router-link to="/register" class="nav-item nav-link">New user? Sign Up</router-link>
+    </div>
   </div>
 </template>
 

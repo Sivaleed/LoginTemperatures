@@ -37,8 +37,7 @@ const props = defineProps({
 </template>
 
 <style scoped>
-  .form-field{
-    /* display: ; */
+  .form-field{ 
     justify-content: space-between;
     padding: 0.5rem;
     margin-bottom:0.5rem;
@@ -56,6 +55,10 @@ const props = defineProps({
     border-radius: 0.5rem;
   	width:95%;
   }
-
+  select{
+    padding: 0.3rem;
+    border-radius: 0.5rem;
+  	width:95%;
+  }
 </style>
 

@@ -5,12 +5,14 @@ const cors = require('cors')
 const bodyParser = require('body-parser')
 const passport = require('passport');
 const Strategy = require('passport-http-bearer').Strategy;
+const path = require("path");
+const userModel = require("./models/user"); 
+require('dotenv').config({ path: path.resolve(__dirname, '../vue-app/.env') })
 
-const userModel = require("./models/user"); //TODO: to take this feature into another controller like validation
 
 // Constants
-const PORT = 8080;
-const HOST = '127.0.0.1';
+const PORT = process.env.NODE_SERVER_PORT;
+const HOST = process.env.NODE_SERVER_HOST;
 
 // App
 const app = express()
@@ -42,12 +44,9 @@ app.use('/user', user);
 //import temp route 
 const temp = require('./routes/tempRoute');
 app.use('/temp', temp);
-
-//for the forms
-app.use(express.static('../vue-app/src/assets'));
-
-//**Temperory added as public html
-app.use(express.static('../vue-app/dist'));
+//**public folder for vue-app
+app.use(express.static('./public/assets'));
+app.use(express.static('./public'));
 
 //if any invalid request populate common error message
 app.get('*', (req, res, next) => {

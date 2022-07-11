@@ -14,11 +14,11 @@ export const userAuth = defineStore('auth',{
     actions: {
         async login(formData) {
            
-            //Callback end server endpoint
+            //Callback sign in endpoint
             await postData(1000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_LOGIN , formData)
             .then(r=>{
                
-                //TODO: must check api key is availble with the json object
+                //Check api key is availble with the json object
                 if(r?.token){          
                     this.user = r
                     localStorage.setItem('user', JSON.stringify(this.user))
@@ -28,7 +28,7 @@ export const userAuth = defineStore('auth',{
                 }
             })  
             .then( async (r) => {
-                //Retrive data from 
+                //Retrive data from server
                 if(r){
                     
                  return await tempStore().createTemp(this.user)
@@ -38,7 +38,6 @@ export const userAuth = defineStore('auth',{
                     })
                     .catch(e=>{
                         
-                        //TODO if data failed to load into store then better display warining message
                         return false
                     })
                 }
@@ -86,6 +85,7 @@ export const userAuth = defineStore('auth',{
         },
         async logout() {
 
+            //Request to remove user token
             await getData(2000, import.meta.env.VITE_API_URL + import.meta.env.VITE_API_END_POINT_LOGOUT+'?id='+this.user.id, this.user.token)
             .then(async (r)=>{
                 
@@ -99,8 +99,6 @@ export const userAuth = defineStore('auth',{
                 
                 return Promise.reject(e.response.data.errors)
             })
-
-            //TODO: must send the request to server and delete the session            
            
         }
     }   

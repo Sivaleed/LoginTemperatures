@@ -1,0 +1,126 @@
+{
+    "config" : {
+        "pagetitles":{
+                        "home" : "Welcome to Weather App",
+                        "regsitration" : "New user? Sign Up",
+                        "dashboard" : "Login Temperatures"   
+                    },
+        "cities":[
+                { 
+                    "id": 1, 
+                    "name": "Colombo", 
+                    "lat": "6.9271", 
+                    "lon": "79.8612" 
+                },
+                { 
+                    "id": 2, 
+                    "name": "Chicago", 
+                    "lat": "33.44", 
+                    "lon": "-94.04" 
+                },
+                { 
+                    "id": 3, 
+                    "name": "Melbourne", 
+                    "lat": "37.8136", 
+                    "lon": "144.9631" 
+                },
+                { 
+                    "id": 4, 
+                    "name": "London", 
+                    "lat": "51.5072", 
+                    "lon": "0.1276" 
+                },
+                { 
+                    "id": 5, 
+                    "name": "Cape Town", 
+                    "lat": "33.9249", 
+                    "lon": "18.4241" 
+                },
+                { 
+                    "id": 6, 
+                    "name": "Sydney", 
+                    "lat": "33.8688", 
+                    "lon": "151.2093" 
+                },
+                { 
+                    "id": 7, 
+                    "name": "Singapore", 
+                    "lat": "1.3521", 
+                    "lon": "103.8198" 
+                }
+            ],
+        "forms": { 
+                    "regsitration" : {                        
+                        "formtitle": "Sign Up",
+                        "formfields": {
+                            "fullName": { 
+                                "label": "Full Name", 
+                                "error": "", 
+                                "placeholder": "Your name", 
+                                "type": "text", 
+                                "name": "fullName", 
+                                "value":"", 
+                                "validation":""
+                                },
+                            "userName": { 
+                                "label": "Username", 
+                                "error": "", 
+                                "placeholder": "", 
+                                "type": "text", 
+                                "name": "userName", 
+                                "value": ""
+                            },
+                            "password": { 
+                                "label": "Password", 
+                                "error": "", 
+                                "placeholder": "", 
+                                "type":"password", 
+                                "name":"password", 
+                                "value":""
+                            },
+                            "confirmPassword": { 
+                                "label": "Confirm Password", 
+                                "error": "", "placeholder": "", 
+                                "type":"password", 
+                                "name":"confirmPassword", 
+                                "value":""
+                            },
+                            "cities": { 
+                                "label": "Select 2 Cities", 
+                                "error": "", 
+                                "placeholder": "", 
+                                "type":"select", 
+                                "name":"cities", 
+                                "options": "true", 
+                                "value":""
+                            }
+                        }
+                    },                
+                    "login":{
+                        "formtitle": "Sign In",
+                        "formfields":{
+                            "userName":{
+                                "validation": "", 
+                                "label": "Username", 
+                                "error": "", 
+                                "placeholder": "", 
+                                "type":"text", 
+                                "name": "userName", 
+                                "value" :""
+                            },
+                            "password":{
+                                "validation": "", 
+                                "label": "Password", 
+                                "error": "", 
+                                "placeholder": "", 
+                                "type":"password", 
+                                "name":"password", 
+                                "value":""
+                            }
+                        }
+                    }
+                
+        }
+    }
+
+}
