@@ -37,8 +37,8 @@ export const userAuth = defineStore('auth',{
                         return true
                     })
                     .catch(e=>{
-                        
-                        return false
+                        tempStore().warning = "Weather API request failed, please try again."
+                        return true
                     })
                 }
                 

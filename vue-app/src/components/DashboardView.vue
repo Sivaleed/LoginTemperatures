@@ -7,7 +7,7 @@ import { tempStore } from '../stores/temp.store'
 import configJson from '../../config.json'
 
 const defaultErr = ref()
-const warning = ref(null)
+const warning = ref(tempStore().warning)
 const hottestLabel = ref(true)
 const header = ref(configJson?.config?.pagetitles?.dashboard)
 

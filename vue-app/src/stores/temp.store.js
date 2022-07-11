@@ -7,6 +7,7 @@ export const tempStore = defineStore('temp',{
     state: () => {
         return {
             temperature: JSON.parse(localStorage.getItem('temperature')),
+            warning : ''
         }
     },
     actions: {
@@ -17,7 +18,8 @@ export const tempStore = defineStore('temp',{
             .then(r=>{
                 return true
             })
-            .catch(e=>{                  
+            .catch(e=>{
+                                 
                 return Promise.reject(e.response.data.errors)
             })    
         
@@ -38,7 +40,7 @@ export const tempStore = defineStore('temp',{
                 
             })
             .catch(e=>{
-               
+              
                 return Promise.reject(e.response.data.errors)
             })
         },

@@ -1,1 +1,0 @@
-import{o as s,c,e as n,t as _}from"./index.a1eef302.js";var l=(e,r)=>{const t=e.__vccOpts||e;for(const[a,o]of r)t[a]=o;return t};const p={class:"header"},d={__name:"TitleBox",props:{header:{type:String,required:!0}},setup(e){return(r,t)=>(s(),c("div",p,[n("h1",null,_(e.header),1)]))}};export{l as _,d as a};
